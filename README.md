@@ -7,11 +7,7 @@ This repository was created using Ansible version 2.13.3. If having problem laun
 This repository is composed of multiple folders, used as follows:
 
 ```.
-├── README.md              -> this file
-├── inventories            -> hosts inventory files
-│  └── hosts.yml           -> describes the different hosts
-├── playbooks              -> ansible playbooks
-├── roles                  -> ansible roles
+TBC
 ```
 
 ## Using ansible
