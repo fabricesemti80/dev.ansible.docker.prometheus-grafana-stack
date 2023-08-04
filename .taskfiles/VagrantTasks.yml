@@ -13,7 +13,7 @@ tasks:
     desc: Bring the stack down
     ignore_error: false
     cmds:
-      - vagrant up
+      - vagrant down
 
   destroy:
     desc: Destroy the stack

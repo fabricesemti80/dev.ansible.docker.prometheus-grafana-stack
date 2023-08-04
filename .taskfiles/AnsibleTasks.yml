@@ -2,6 +2,11 @@
 version: '3'
 env:
   SMTP_PASS_FILE: smtp_pass.yml
+
+  # #? create password:
+  # echo 'my_vault_password' > .vault_pass
+  # echo '.vault_pass' >> .gitignore
+
   ANSIBLE_VAULT_PASSWORD_FILE: .vault_pass
 
 tasks:
@@ -15,16 +20,18 @@ tasks:
 
 #* Deployment tasks
   init-dep:
-    desc: Install the necessary requirements
+    desc: Install the necessary requirements (run only once!)
     ignore_error: false
     cmds:
-      ##? https://www.digitalocean.com/community/tutorials/how-to-use-vault-to-protect-sensitive-ansible-data
-      ##? http://www.freekb.net/Article?id=2420
-      #- ansible-galaxy install -r requirements.yml --force
-      # - ansible-vault create smtp_pass.yml
-      # - cat smtp_pass.yml
-      ## - ansible-vault view $SMTP_PASS_FILE
-      # - ansible-vault view --vault-password-file .vault_pass $SMTP_PASS_FILE
+
+      # #? https://www.digitalocean.com/community/tutorials/how-to-use-vault-to-protect-sensitive-ansible-data
+      # #? http://www.freekb.net/Article?id=2420
+
+      - ansible-galaxy install -r requirements.yml --force                        # this will install the required Ansible roles / collections
+      # - ansible-vault create $SMTP_PASS_FILE                                    # this will create the smtp password file - currently not used
+      # - cat smtp_pass.yml                                                       # this will display the contents of the file - currently not used
+      # - ansible-vault view $SMTP_PASS_FILE                                      # this will show the  $SMTP_PASS_FILE    contents; it depends on the ANSIBLE_VAULT_PASSWORD_FILE containing the vault pass
+      # - ansible-vault view --vault-password-file .vault_pass $SMTP_PASS_FILE    # this will show the  $SMTP_PASS_FILE    contents; assumes you supply the password file from CLI
 
   dep-monitor:
     desc: Deploy Prometheus monitoring server(s)
@@ -38,7 +45,7 @@ tasks:
     cmds:
       - ansible-playbook provisioning/playbooks/monitoring.yml -t target  #--ask-vault-pass
 
-  dep-all:
+  up:
     desc: Deploy complete Prometheus/Grafana stack (observer, target)
     cmds:
       - task: dep-monitor
