@@ -1,0 +1,21 @@
+- name: Install Observability stack (targets)
+  hosts: target
+  tags:
+    - monitoring
+    - target
+  roles:
+    - ../roles/prep
+    - geerlingguy.docker # install Docker - ref: https://galaxy.ansible.com/geerlingguy/docker
+    - ../roles/target
+  become: true  # Set privilege escalation for all tasks in this playbook
+
+- name: Install Observability stack (observer)
+  hosts: observer
+  tags:
+    - monitoring
+    - observer
+  roles:
+    - ../roles/prep
+    - geerlingguy.docker # install Docker - ref: https://galaxy.ansible.com/geerlingguy/docker
+    - ../roles/observer
+  become: true  # Set privilege escalation for all tasks in this playbook

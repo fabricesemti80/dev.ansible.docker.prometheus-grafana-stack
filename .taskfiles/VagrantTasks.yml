@@ -1,0 +1,22 @@
+---
+version: '3'
+
+tasks:
+
+  up:
+    desc: Bring the stack up
+    ignore_error: false
+    cmds:
+      - vagrant up
+
+  down:
+    desc: Bring the stack down
+    ignore_error: false
+    cmds:
+      - vagrant up
+
+  destroy:
+    desc: Destroy the stack
+    ignore_error: false
+    cmds:
+      - vagrant destroy --force

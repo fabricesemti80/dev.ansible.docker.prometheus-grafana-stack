@@ -1,0 +1,37 @@
+---
+version: '3'
+
+tasks:
+
+#* General tasks
+  comcheck:
+    desc: Test connection to all 'linux' end 'win' groups (the 2x main groups)
+    ignore_error: true
+    cmds:
+      - ansible -m ping all
+
+#* Deployment tasks
+  init-dep:
+    desc: Install the necessary requirements
+    ignore_error: false
+    cmds:
+      - ansible-galaxy install -r requirements.yml --force
+      - read -s ansible_vault_pass && export ansible_vault_pass
+
+  dep-monitor:
+    desc: Deploy Prometheus monitoring server(s)
+    ignore_error: false
+    cmds:
+      - ansible-playbook provisioning/playbooks/monitoring.yml -t observer --vault-password-file <(cat <<<"$ansible_vault_pass") # --ask-vault-pass
+
+  dep-target:
+    desc: Deploy Prometheus node exporter on target server(s)
+    ignore_error: false
+    cmds:
+      - ansible-playbook provisioning/playbooks/monitoring.yml -t target --vault-password-file <(cat <<<"$ansible_vault_pass") # --ask-vault-pass
+
+  dep-all:
+    desc: Deploy complete Prometheus/Grafana stack (observer, target)
+    cmds:
+      - task: dep-monitor
+      - task: dep-target
