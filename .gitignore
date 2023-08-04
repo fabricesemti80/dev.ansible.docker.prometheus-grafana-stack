@@ -1,1 +1,3 @@
 .vagrant**
+.envrc
+.vault_pass

@@ -8,8 +8,7 @@ vars:
 dotenv: [".config.env"]
 
 env:
-  # add env variables
-  {}
+  EDITOR: nano
 
 includes:
   ansible: .taskfiles/AnsibleTasks.yml

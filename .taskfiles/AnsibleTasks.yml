@@ -1,5 +1,8 @@
 ---
 version: '3'
+env:
+  SMTP_PASS_FILE: smtp_pass.yml
+  ANSIBLE_VAULT_PASSWORD_FILE: .vault_pass
 
 tasks:
 
@@ -15,20 +18,25 @@ tasks:
     desc: Install the necessary requirements
     ignore_error: false
     cmds:
-      - ansible-galaxy install -r requirements.yml --force
-      - read -s ansible_vault_pass && export ansible_vault_pass
+      ##? https://www.digitalocean.com/community/tutorials/how-to-use-vault-to-protect-sensitive-ansible-data
+      ##? http://www.freekb.net/Article?id=2420
+      #- ansible-galaxy install -r requirements.yml --force
+      # - ansible-vault create smtp_pass.yml
+      # - cat smtp_pass.yml
+      ## - ansible-vault view $SMTP_PASS_FILE
+      # - ansible-vault view --vault-password-file .vault_pass $SMTP_PASS_FILE
 
   dep-monitor:
     desc: Deploy Prometheus monitoring server(s)
     ignore_error: false
     cmds:
-      - ansible-playbook provisioning/playbooks/monitoring.yml -t observer --vault-password-file <(cat <<<"$ansible_vault_pass") # --ask-vault-pass
+      - ansible-playbook provisioning/playbooks/monitoring.yml -t observer  #--ask-vault-pass
 
   dep-target:
     desc: Deploy Prometheus node exporter on target server(s)
     ignore_error: false
     cmds:
-      - ansible-playbook provisioning/playbooks/monitoring.yml -t target --vault-password-file <(cat <<<"$ansible_vault_pass") # --ask-vault-pass
+      - ansible-playbook provisioning/playbooks/monitoring.yml -t target  #--ask-vault-pass
 
   dep-all:
     desc: Deploy complete Prometheus/Grafana stack (observer, target)
