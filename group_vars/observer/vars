@@ -13,6 +13,10 @@ alertmanager_port: 9093
 node_exporter_port: 9100
 cadvisor_port: 9101
 grafana_port: 3000
+windows_node_port: ''
+windows_node_targets: [] # default - no target
+linux_node_port: ''
+linux_node_targets: []   # default - no target
 
 # sensitive data
 alertmanager_smtp_password: "{{ vault_alertmanager_smtp_password }}"

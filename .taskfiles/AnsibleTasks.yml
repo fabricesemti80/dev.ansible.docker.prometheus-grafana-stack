@@ -42,22 +42,34 @@ tasks:
       - cat $VAULT_SECRETS_FILE_OBSERVER                                # raw vault file contents
       - ansible-vault view $VAULT_SECRETS_FILE_OBSERVER                 # decrypted vault file contents
       - ansible -m debug -a 'var=hostvars[inventory_hostname]' observer # debug
+      - ansible -m debug -a 'var=hostvars[inventory_hostname]' target # debug      -
       # - ansible-vault view --vault-password-file .vault_pass $VAULT_SECRETS_FILE_OBSERVER    # this will show the  $VAULT_SECRETS_FILE_OBSERVER    contents; assumes you supply the password file from CLI
 
   build-servers:
-    desc: Deploy Prometheus monitoring server(s)
+    desc: Deploy Prometheus monitoring server(s) [does not include live hosts]
     ignore_error: false
     cmds:
-      - ansible-playbook provisioning/playbooks/monitoring.yml -t observer  #--ask-vault-pass
+      - ansible-playbook provisioning/playbooks/monitoring.yml -t observer
+
+  build-servers-live:
+    # use 'windows_hosts.yml' file to define the port and targets for the 'windows' job
+    # use 'linux_node_port' file to define the port and targets for the 'linux' job
+    # for the sake of simplicity, by default I am assuming we use the default windows exporter port [9182] and default node exporter port [9100] - modify these if needed
+    # the deployment of these are not covered included in this repository
+    # nodes also need to be reachable from the observer server(s) on these ports; use dns hostname or IP for the host
+    desc: Deploy Prometheus monitoring server(s) with live hosts included
+    ignore_error: false
+    cmds:
+      - ansible-playbook provisioning/playbooks/monitoring.yml -t observer -e "@group_vars/observer/live.yml"
 
   build-targets:
     desc: Deploy [the test] monitoring target(s)
     ignore_error: false
     cmds:
-      - ansible-playbook provisioning/playbooks/monitoring.yml -t target  #--ask-vault-pass
+      - ansible-playbook provisioning/playbooks/monitoring.yml -t target
 
   up:
-    desc: Deploy complete Prometheus/Grafana stack (observer, targets)
+    desc: Main deployment - deploys the complete test stack (does not include live hosts!)
     cmds:
       - task: build-servers
       - task: build-targets
