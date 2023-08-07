@@ -1,7 +1,7 @@
 ---
 version: '3'
 env:
-  VAULT_SECRETS_FILE: group_vars/observer/vault
+  VAULT_SECRETS_FILE_OBSERVER: group_vars/observer/vault
 
   # #? create password:
   # echo 'my_vault_password' > .vault_pass
@@ -19,7 +19,7 @@ tasks:
       - ansible -m ping all
 
 #* Deployment tasks
-  init-dep:
+  init:
     desc: Install the necessary requirements (run only once!)
     ignore_error: false
     cmds:
@@ -27,16 +27,17 @@ tasks:
       # #? https://www.digitalocean.com/community/tutorials/how-to-use-vault-to-protect-sensitive-ansible-data
       # #? http://www.freekb.net/Article?id=2420
 
-      # - ansible-vault create $VAULT_SECRETS_FILE
-      - ansible-vault view $VAULT_SECRETS_FILE                                      # this will show the  $VAULT_SECRETS_FILE    contents; it depends on the ANSIBLE_VAULT_PASSWORD_FILE containing the vault pass
-      - ansible -m debug -a 'var=hostvars[inventory_hostname]' observer
+      - ansible-galaxy install -r requirements.yml --force                        # this will install the required Ansible roles / collections
+      - ansible-vault create $VAULT_SECRETS_FILE_OBSERVER                         # this will create the ansible secret file for the obserer(s)
+      - task: verify
 
-      # - ansible-galaxy install -r requirements.yml --force                        # this will install the required Ansible roles / collections
-      #- ansible-vault create $VAULT_SECRETS_FILE                                    # this will create the smtp password file - currently not used
-      # - cat smtp_pass.yml                                                       # this will display the contents of the file - currently not used
-
-      # - ansible-vault view --vault-password-file .vault_pass $VAULT_SECRETS_FILE    # this will show the  $VAULT_SECRETS_FILE    contents; assumes you supply the password file from CLI
-
+  verify:
+    desc: Verify Ansible vault
+    cmds:
+      - cat $VAULT_SECRETS_FILE_OBSERVER                                # raw vault file contents
+      - ansible-vault view $VAULT_SECRETS_FILE_OBSERVER                 # decrypted vault file contents
+      - ansible -m debug -a 'var=hostvars[inventory_hostname]' observer # debug
+      # - ansible-vault view --vault-password-file .vault_pass $VAULT_SECRETS_FILE_OBSERVER    # this will show the  $VAULT_SECRETS_FILE_OBSERVER    contents; assumes you supply the password file from CLI
 
   dep-monitor:
     desc: Deploy Prometheus monitoring server(s)
