@@ -9,14 +9,14 @@ tasks:
 
 #* General tasks
   comcheck:
-    desc: Test connection to all 'linux' end 'win' groups (the 2x main groups)
+    desc: Test connectivity to the test deployment (we won't ping actual live servers!)
     ignore_error: true
     cmds:
       - ansible -m ping all
 
 #* Deployment tasks
   init:
-    desc: Install the necessary requirements (run only once!)
+    desc: Initialize the Ansible work environment
     ignore_error: false
     cmds:
 
@@ -37,27 +37,27 @@ tasks:
       - task: verify
 
   verify:
-    desc: Verify Ansible vault
+    desc: Verify if Ansible secrets are present / ready to use
     cmds:
       - cat $VAULT_SECRETS_FILE_OBSERVER                                # raw vault file contents
       - ansible-vault view $VAULT_SECRETS_FILE_OBSERVER                 # decrypted vault file contents
       - ansible -m debug -a 'var=hostvars[inventory_hostname]' observer # debug
       # - ansible-vault view --vault-password-file .vault_pass $VAULT_SECRETS_FILE_OBSERVER    # this will show the  $VAULT_SECRETS_FILE_OBSERVER    contents; assumes you supply the password file from CLI
 
-  dep-monitor:
+  build-servers:
     desc: Deploy Prometheus monitoring server(s)
     ignore_error: false
     cmds:
       - ansible-playbook provisioning/playbooks/monitoring.yml -t observer  #--ask-vault-pass
 
-  dep-target:
-    desc: Deploy Prometheus node exporter on target server(s)
+  build-targets:
+    desc: Deploy [the test] monitoring target(s)
     ignore_error: false
     cmds:
       - ansible-playbook provisioning/playbooks/monitoring.yml -t target  #--ask-vault-pass
 
   up:
-    desc: Deploy complete Prometheus/Grafana stack (observer, target)
+    desc: Deploy complete Prometheus/Grafana stack (observer, targets)
     cmds:
-      - task: dep-monitor
-      - task: dep-target
+      - task: build-servers
+      - task: build-targets

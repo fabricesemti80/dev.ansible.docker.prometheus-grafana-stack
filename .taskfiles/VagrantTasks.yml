@@ -4,19 +4,19 @@ version: '3'
 tasks:
 
   up:
-    desc: Bring the stack up
+    desc: Build VM-s
     ignore_error: false
     cmds:
       - vagrant up
 
   down:
-    desc: Bring the stack down
+    desc: Turn off VM-s
     ignore_error: false
     cmds:
       - vagrant down
 
   destroy:
-    desc: Destroy the stack
+    desc: Destroy [all, but only local/test] VM-s (careful, does not need approval!)
     ignore_error: false
     cmds:
       - vagrant destroy --force

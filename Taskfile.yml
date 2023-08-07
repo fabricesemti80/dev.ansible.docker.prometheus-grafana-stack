@@ -18,14 +18,7 @@ includes:
 tasks:
 
   init:
-    desc: Initialize workstation dependencies with Brew
-    cmds:
-      - brew install {{.DEPS}} {{.CLI_ARGS}}
-    preconditions:
-      - sh: command -v brew
-        msg: |
-          Homebrew is not installed. Using MacOS, Linux or WSL?
-          Head over to https://brew.sh to get up and running.
+    desc: Prepare development workstation (please install Virtualbox separately!)
     vars:
       DEPS: >-
         ansible
@@ -34,9 +27,17 @@ tasks:
         jq
         yamllint
         vagrant
+    preconditions:
+      - sh: command -v brew
+        msg: |
+          Homebrew is not installed. Using MacOS, Linux or WSL?
+          Head over to https://brew.sh to get up and running.
+    cmds:
+      - brew install {{.DEPS}} {{.CLI_ARGS}}
+      - task: ansible:init
 
-  stack-up:
-    desc: builds the whole development stack
+  build:
+    desc: Build the complete dev stack
     cmds:
       - task: vagrant:up
       - task: ansible:comcheck
