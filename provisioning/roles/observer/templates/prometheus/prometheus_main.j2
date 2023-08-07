@@ -1,0 +1,29 @@
+# roles/monitoring/templates/prometheus.yml.j2
+
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    scrape_interval: 30s
+    static_configs:
+    - targets: ["localhost:{{ prometheus_port }}"]
+
+  - job_name: node-exporter
+    scrape_interval: 30s
+    static_configs:
+    - targets: ["{{ observer_host }}:{{ node_exporter_port }}", {% for target in observer_targets %}"{{ target }}:{{ node_exporter_port }}"{% if not loop.last %},{% endif %}{% endfor %}]
+
+  - job_name: cadvisor
+    scrape_interval: 30s
+    static_configs:
+    - targets: [{% for target in observer_targets %}"{{ target }}:{{ cadvisor_port }}"{% if not loop.last %},{% endif %}{% endfor %}]
+
+rule_files:
+  - prometheus_alerts_rules.yml
+
+alerting:
+  alertmanagers:
+    - static_configs:
+      - targets:
+        - {{ observer_host }}:{{ alertmanager_port }}

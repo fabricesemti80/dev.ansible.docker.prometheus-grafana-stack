@@ -19,9 +19,9 @@
     state: directory
 
 - name: Create prometheus configuration file
-  copy:
+  template:
     dest: /srv/prometheus/prometheus.yml
-    src: prometheus_main.yml
+    src: prometheus/prometheus_main.j2
     mode: 0644
 
 - name: Create prometheus alert configuration file

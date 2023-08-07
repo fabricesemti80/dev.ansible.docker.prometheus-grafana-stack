@@ -28,13 +28,16 @@ tasks:
           Head over to https://brew.sh to get up and running.
     vars:
       DEPS: >-
-        age
         ansible
         direnv
         go-task/tap/go-task
         jq
-        pre-commit
-        sops
         yamllint
-        yq
         vagrant
+
+  stack-up:
+    desc: builds the whole development stack
+    cmds:
+      - task: vagrant:up
+      - task: ansible:comcheck
+      - task: ansible:up
