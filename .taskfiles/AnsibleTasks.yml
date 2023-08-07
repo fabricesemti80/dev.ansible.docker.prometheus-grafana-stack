@@ -3,10 +3,6 @@ version: '3'
 env:
   VAULT_SECRETS_FILE_OBSERVER: group_vars/observer/vault
 
-  # #? create password:
-  # echo 'my_vault_password' > .vault_pass
-  # echo '.vault_pass' >> .gitignore
-
   ANSIBLE_VAULT_PASSWORD_FILE: .vault_pass
 
 tasks:
@@ -27,8 +23,17 @@ tasks:
       # #? https://www.digitalocean.com/community/tutorials/how-to-use-vault-to-protect-sensitive-ansible-data
       # #? http://www.freekb.net/Article?id=2420
 
-      - ansible-galaxy install -r requirements.yml --force                        # this will install the required Ansible roles / collections
-      - ansible-vault create $VAULT_SECRETS_FILE_OBSERVER                         # this will create the ansible secret file for the obserer(s)
+      #^ install Ansible requirements
+      - ansible-galaxy install -r requirements.yml --force
+
+      #^ create vault password for encryption
+      - echo 'my_vault_password' > .vault_pass
+      - echo '.vault_pass' >> .gitignore
+
+      #^ store the sensitive data in a vault file (need to fill out manually!)
+      - ansible-vault create $VAULT_SECRETS_FILE_OBSERVER
+
+      #^ run verification                     # this will create the ansible secret file for the obserer(s)
       - task: verify
 
   verify:
