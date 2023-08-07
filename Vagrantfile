@@ -4,7 +4,7 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # General Vagrant VM configuration.
+  # General Vagrant Linux VM configuration.
   config.vm.box = "geerlingguy/rockylinux8"
   config.ssh.insert_key = false
   config.vm.synced_folder ".", "/vagrant", disabled: true
@@ -13,6 +13,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.cpus = 3
     v.linked_clone = true
   end
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # General Vagrant Windows VM configuration.
+  config.vm.box = "gusztavvargadr/windows-server-core"
+  config.vm.communicator = "winrm"
+  # config.winrm.username = "your_windows_username"
+  # config.winrm.password = "your_windows_password"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.provider :virtualbox do |v|
+    v.memory = 1024
+    v.cpus = 2
+    v.linked_clone = true
+  end
+end
 
   # Observer servers.
   config.vm.define "padok-observer" do |observer|
