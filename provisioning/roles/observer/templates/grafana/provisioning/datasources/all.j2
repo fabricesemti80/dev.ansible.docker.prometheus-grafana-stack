@@ -4,4 +4,4 @@ datasources:
   - name: Prometheus
     type: prometheus
     access: proxy
-    url: "http://{{  observer_host  }}:9090"
+    url: "http://{{  observer_host  }}:{{ prometheus_port }}"

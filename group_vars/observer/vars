@@ -12,6 +12,7 @@ prometheus_port: 9090
 alertmanager_port: 9093
 node_exporter_port: 9100
 cadvisor_port: 9101
+grafana_port: 3000
 
 # sensitive data
 alertmanager_smtp_password: "{{ vault_alertmanager_smtp_password }}"
