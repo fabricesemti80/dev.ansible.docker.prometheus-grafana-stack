@@ -1,0 +1,8 @@
+---
+# nonsensitive data
+smtp_host: smtp.gmail.com:587
+smtp_user: automations.fs@gmail.com
+smtp_from: automations.fs@gmail.com
+smtp_to: fsemti@sportinggroup.co.uk
+# sensitive data
+alertmanager_smtp_password: "{{ vault_alertmanager_smtp_password }}"
