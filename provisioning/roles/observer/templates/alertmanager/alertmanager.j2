@@ -6,8 +6,8 @@ route:
 receivers:
   - name: "mail"
     email_configs:
-      - smarthost: "smtp.gmail.com:587"
-        auth_username: "automations.fs@gmail.com"
+      - smarthost: "{{  smtp_host }}"
+        auth_username: "{{  smtp_user }}"
         auth_password: "{{ alertmanager_smtp_password }}"
-        from: "automations.fs@gmail.com"
-        to: "fsemti@sportinggroup.co.uk"
+        from: "{{ smtp_from }}"
+        to: "{{ smtp_to   }}"

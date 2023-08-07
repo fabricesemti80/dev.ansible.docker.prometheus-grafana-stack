@@ -1,0 +1,10 @@
+version: '3'
+
+tasks:
+  test:
+    desc: Send a test alert via the Prometheus Alert Manager
+    ignore_errors: false
+    cmds:
+      #? https://fabianlee.org/2022/07/03/prometheus-sending-a-test-alert-through-alertmanager/
+      - |
+        curl -H "Content-Type: application/json" -d '[{"labels":{"alertname":"myalert"}}]' http://192.168.56.10:9093/api/v1/alerts
