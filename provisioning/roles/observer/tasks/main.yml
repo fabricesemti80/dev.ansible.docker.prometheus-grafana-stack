@@ -36,11 +36,23 @@
     src: grafana
     mode: 0644
 
-- name: Create alertmanager configuration file
+- name: Create grafana data sources file from template
+  template:
+    dest: /srv/grafana/provisioning/datasources/all.yml
+    src: grafana/provisioning/datasources/all.j2
+    mode: 0644
+
+- name: Create alertmanager configuration file from template
   template:
     dest: /srv/alertmanager/alertmanager.yml
     src: alertmanager/alertmanager.j2
     mode: 0644
+
+- name: Stop and remove the old Prometheus container
+  docker_container:
+    name: prometheus
+    state: absent
+  become: true
 
 - name: Create Prometheus container
   docker_container:
@@ -59,6 +71,12 @@
       --web.enable-lifecycle
     published_ports: "9090:9090"
 
+- name: Stop and remove the old Grafana container
+  docker_container:
+    name: grafana
+    state: absent
+  become: true
+
 - name: Create Grafana container
   docker_container:
     name: grafana
@@ -72,6 +90,12 @@
       GF_AUTH_ANONYMOUS_ENABLED: "true"
       GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
     published_ports: "3000:3000"
+
+- name: Stop and remove the old Alertmanager container
+  docker_container:
+    name: alertmanager
+    state: absent
+  become: true
 
 - name: Create Alertmanager container
   docker_container:
