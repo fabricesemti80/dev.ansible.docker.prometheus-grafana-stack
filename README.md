@@ -40,6 +40,18 @@ the solution for this is mostly described here: <https://developer.hashicorp.com
 
 </details>
 
+## Screenshots
+
+![image](https://github.com/fabricesemti80/dev.ansible.docker.prometheus-grafana-stack/assets/37410363/cfdd3822-61dd-4f0f-aa6a-209bf64a7954)
+
+![image](https://github.com/fabricesemti80/dev.ansible.docker.prometheus-grafana-stack/assets/37410363/5ea9f748-af7b-45b0-a554-1db69e33657e)
+
+![image](https://github.com/fabricesemti80/dev.ansible.docker.prometheus-grafana-stack/assets/37410363/2b902dc9-6b2a-435b-a158-9d71df9655ae)
+
+![image](https://github.com/fabricesemti80/dev.ansible.docker.prometheus-grafana-stack/assets/37410363/91139e4f-0397-4e6f-b72b-9d086aa31715)
+
+![image](https://github.com/fabricesemti80/dev.ansible.docker.prometheus-grafana-stack/assets/37410363/47ce4bce-908e-45cc-bbe9-e7aa375de996)
+
 
 ## References / inspirations
 
