@@ -4,4 +4,4 @@ linux_node_targets:
   - example.linux.host
 windows_node_port: 9182
 windows_node_targets:
-  - example.windows.host-
+  - example.windows.host

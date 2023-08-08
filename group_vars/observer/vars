@@ -6,8 +6,8 @@ smtp_from: automations.fs@gmail.com
 smtp_to: fsemti@sportinggroup.co.uk
 observer_host: 192.168.56.10
 observer_targets:
-  - 192.168.56.20
-  - 192.168.56.21
+  - 192.168.56.11
+  - 192.168.56.12
 prometheus_port: 9090
 alertmanager_port: 9093
 node_exporter_port: 9100
