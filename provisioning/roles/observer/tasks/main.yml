@@ -1,60 +1,60 @@
 ---
 
-- name: Create Folder /srv/prometheus if not exist
+- name: PROMETHEUS -  create configuration folder [if not exists]
   file:
     path: /srv/prometheus
     mode: 0755
     state: directory
 
-- name: Create Folder /srv/grafana if not exist
-  file:
-    path: /srv/grafana
-    mode: 0755
-    state: directory
+# - name: GRAFANA -  create configuration folder [ if not exists]
+#   file:
+#     path: /srv/grafana
+#     mode: 0755
+#     state: directory
 
-- name: Create Folder /srv/alertmanager if not exist
+- name: ALERT MANAGER -  create configuration folder [if not exists]
   file:
     path: /srv/alertmanager
     mode: 0755
     state: directory
 
-- name: Create prometheus configuration file
+- name: PROMETHEUS -  create/update  main configuration file
   template:
     dest: /srv/prometheus/prometheus.yml
     src: prometheus/prometheus_main.j2
     mode: 0644
 
-- name: Create prometheus alert configuration file
+- name: PROMETHEUS -  create/update  alert configuration file
   copy:
     dest: /srv/prometheus/prometheus_alerts_rules.yml
     src: prometheus_alerts_rules.yml
     mode: 0644
 
-- name: Create grafana configuration files
+- name: GRAFANA -  import configurations from 'provisioning/roles/observer/files/grafana'
   copy:
     dest: /srv/
     src: grafana
     mode: 0644
 
-- name: Create grafana data sources file from template
+- name: GRAFANA -  define data sources [ only Prometheus by default]
   template:
     dest: /srv/grafana/provisioning/datasources/all.yml
     src: grafana/provisioning/datasources/all.j2
     mode: 0644
 
-- name: Create alertmanager configuration file from template
+- name: ALERT MANAGER -  create/update configuration file
   template:
     dest: /srv/alertmanager/alertmanager.yml
     src: alertmanager/alertmanager.j2
     mode: 0644
 
-- name: Stop and remove the old Prometheus container
+- name: PROMETHEUS -  drop old container [if present]
   docker_container:
     name: prometheus
     state: absent
   become: true
 
-- name: Create Prometheus container
+- name: PROMETHEUS - Create new container
   docker_container:
     name: prometheus
     restart_policy: always
@@ -71,13 +71,13 @@
       --web.enable-lifecycle
     published_ports: "{{  prometheus_port  }}:9090"
 
-- name: Stop and remove the old Grafana container
+- name: GRAFANA - drop old container [if present]
   docker_container:
     name: grafana
     state: absent
   become: true
 
-- name: Create Grafana container
+- name: GRAFANA - Create new container
   docker_container:
     name: grafana
     restart_policy: always
@@ -91,13 +91,13 @@
       GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
     published_ports: "{{  grafana_port  }}:3000"
 
-- name: Stop and remove the old Alertmanager container
+- name: ALERT MANAGER -  drop old container [if present]
   docker_container:
     name: alertmanager
     state: absent
   become: true
 
-- name: Create Alertmanager container
+- name: ALERT MANAGER - Create new container
   docker_container:
     name: alertmanager
     restart_policy: always
